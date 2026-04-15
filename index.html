@@ -185,22 +185,30 @@ srData.push(obj);
 }
 
 function parseSKUData(text) {
-const rows = text.split('\n').map(r => r.split(','));
-if (rows.length < 2) return;
+  const rows = text.split('\n').map(r => r.split(','));
+  if (rows.length < 2) return;
 
-const headers = rows[0].map(h => h?.trim().toLowerCase());
-skuData = [];
+  const headers = rows[0].map(h => h?.trim().toLowerCase());
+  skuData = [];
 
-for (let i = 1; i < rows.length; i++) {
-const row = rows[i];
-if (row.length < 2) continue;
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    if (row.length < 2) continue;
 
-const obj = {};
-headers.forEach((h, idx) => {
-obj[h] = row[idx]?.trim();
-});
-skuData.push(obj);
-}
+    const obj = {};
+    headers.forEach((h, idx) => {
+      let val = row[idx];
+      if (val !== undefined) {
+        if (h === 'bundle number') {
+          val = String(val).trim();
+        } else {
+          val = val?.trim();
+        }
+      }
+      obj[h] = val;
+    });
+    skuData.push(obj);
+  }
 }
 
 function initFilters() {
